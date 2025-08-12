@@ -68,9 +68,11 @@ COPY --from=env /opt/apache-tez-$TEZ_VERSION-bin /opt/tez
 
 # Install dependencies
 RUN set -ex; \
-    microdnf update -y; \
-    microdnf -y install procps; \
-    rm -rf /var/lib/apt/lists/*
+    PKGS="vi vim sudo passwd" && \
+    microdnf update -y && \
+    microdnf -y install procps ${PKGS} && \
+    rm -rf /var/lib/apt/lists/* && \
+    echo "hive ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Set necessary environment variables.
 ENV HADOOP_HOME=/opt/hadoop \
